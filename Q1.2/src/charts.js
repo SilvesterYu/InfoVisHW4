@@ -12,11 +12,20 @@ function SymmetricBarChart(props) {
     // -- lower one -- //
     const yScale2 = scaleLinear().range([height/2, height]).domain([min(data, d=>d.end), max(data, d=>d.end)]).nice();
     
-    const getColor = (selectedStation, d) => {
+    const getColor = (pos, selectedStation, d) => {
         if (selectedStation === d){
-            return "red";
+            if (pos === "up") {
+                
+                return "red";
+            } else if (pos === "down") {
+                return "steelblue";
+         }
         } else {
-            return "steelblue";
+            if (pos === "up"){
+                return "#99d594";
+            } else if (pos === "down") {
+                return "#fc8d59";
+            }
         }
     }
 
@@ -55,7 +64,14 @@ function SymmetricBarChart(props) {
         {data.map(d=>{
                 return (
                 <rect key={d.station} x={xScale(d.station)} y={yScale1(d.start)} 
-                height={height/2-yScale1(d.start)} width={xScale.bandwidth()} fill={getColor(selectedStation, d)} stroke={"black"}
+                height={height/2-yScale1(d.start)} width={xScale.bandwidth()} fill={getColor("up", selectedStation, d)} stroke={"black"}
+                onMouseEnter={(event) => mouseEnter(event, d)} onMouseOut={mouseOut}></rect>
+                )
+                })}
+        {data.map(d=>{
+                return (
+                <rect key={d.station} x={xScale(d.station)} y={height/2 } 
+                height={yScale2(d.start)} width={xScale.bandwidth()} fill={getColor("down", selectedStation, d)} stroke={"black"}
                 onMouseEnter={(event) => mouseEnter(event, d)} onMouseOut={mouseOut}></rect>
                 )
                 })}
