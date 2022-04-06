@@ -27,6 +27,7 @@ function useData(csvPath){
             setData(data);
         });
     }, []);
+    console.log(dataAll);
     return dataAll;
 }
 
