@@ -10,7 +10,7 @@ function SymmetricBarChart(props) {
     // -- upper one -- //
     const yScale1 = scaleLinear().range([height/2, 0]).domain([min(data, d=>d.start), max(data, d=>d.start)]).nice();
     // -- lower one -- //
-    const yScale2 = scaleLinear().range([height/2, height]).domain([min(data, d=>d.end), max(data, d=>d.end)]).nice();
+    const yScale2 = scaleLinear().range([0, height/2]).domain([min(data, d=>d.end), max(data, d=>d.end)]).nice();
     
     const getColor = (pos, selectedStation, d) => {
         if (selectedStation === d){
@@ -52,14 +52,7 @@ function SymmetricBarChart(props) {
                     {tickValue}
                 </text>
                 </g> )}
-        <line y1={height/2} y2={height} stroke='black'/>
-         {yScale2.ticks().map(tickValue => 
-            <g key={tickValue} transform={`translate(-10, ${yScale2(tickValue)})`}>
-                <line x2={10} stroke='black' />
-                <text style={{ textAnchor:'end', fontSize:'10px' }} >
-                    {tickValue}
-                </text>
-                </g> )}
+
 
         {data.map(d=>{
                 return (
@@ -68,13 +61,7 @@ function SymmetricBarChart(props) {
                 onMouseEnter={(event) => mouseEnter(event, d)} onMouseOut={mouseOut}></rect>
                 )
                 })}
-        {data.map(d=>{
-                return (
-                <rect key={d.station} x={xScale(d.station)} y={height/2 } 
-                height={yScale2(d.start)} width={xScale.bandwidth()} fill={getColor("down", selectedStation, d)} stroke={"black"}
-                onMouseEnter={(event) => mouseEnter(event, d)} onMouseOut={mouseOut}></rect>
-                )
-                })}
+        
         
         <g transform={`translate(${0}, ${height/2})`}>
             {/* the text needed is given as the following */}
@@ -82,6 +69,21 @@ function SymmetricBarChart(props) {
             {"Num. of ridders end into a station"}
             </text>
             {/* start your code here */}
+            <line y2={height/2} stroke='black'/>
+         {yScale2.ticks().map(tickValue => 
+            <g key={tickValue} transform={`translate(-10, ${yScale2(tickValue)})`}>
+                <line x2={10} stroke='black' />
+                <text style={{ textAnchor:'end', fontSize:'10px' }} >
+                    {tickValue}
+                </text>
+                </g> )}
+            {data.map(d=>{
+                return (
+                <rect key={d.station} x={xScale(d.station)} y={0} 
+                height={yScale2(d.end)} width={xScale.bandwidth()} fill={getColor("down", selectedStation, d)} stroke={"black"}
+                onMouseEnter={(event) => mouseEnter(event, d)} onMouseOut={mouseOut}></rect>
+                )
+                })}
             
         </g>
     </g>
