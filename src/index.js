@@ -37,6 +37,7 @@ function useMap(jsonPath) {
             setData(geoJsonData);
         })
     }, []);
+    console.log(d3.max(data, d=>d.popularity));
     return data;
 }
 
