@@ -11,6 +11,22 @@ function SymmetricBarChart(props) {
     const yScale1 = scaleLinear().range([height/2, 0]).domain([min(data, d=>d.start), max(data, d=>d.start)]).nice();
     // -- lower one -- //
     const yScale2 = scaleLinear().range([height/2, height]).domain([min(data, d=>d.end), max(data, d=>d.end)]).nice();
+    
+    const getColor = (selectedStation, d) => {
+        if (selectedStation === d){
+            return "red";
+        } else {
+            return "steelblue";
+        }
+    }
+
+    const mouseEnter = (event, d) => {
+        setSelectedStation(d);
+    }
+    const mouseOut = (d) => {
+        setSelectedStation(null);
+    }
+    
 
     return <g transform={`translate(${offsetX}, ${offsetY})`} >
         {/* the text needed is given as the following */}
@@ -35,6 +51,14 @@ function SymmetricBarChart(props) {
                     {tickValue}
                 </text>
                 </g> )}
+
+        {data.map(d=>{
+                return (
+                <rect key={d.station} x={xScale(d.station)} y={yScale1(d.start)} 
+                height={height/2-yScale1(d.start)} width={xScale.bandwidth()} fill={getColor(selectedStation, d)} stroke={"black"}
+                onMouseEnter={(event) => mouseEnter(event, d)} onMouseOut={mouseOut}></rect>
+                )
+                })}
         
         <g transform={`translate(${0}, ${height/2})`}>
             {/* the text needed is given as the following */}

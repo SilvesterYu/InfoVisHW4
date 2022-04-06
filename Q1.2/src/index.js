@@ -54,7 +54,7 @@ function CitiBike(){
     const dataAll = useData(csvUrl);
     const map = useMap(mapUrl);
     const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
+
     if (!map || !dataAll) {
             return <pre>Loading...</pre>;
         };
