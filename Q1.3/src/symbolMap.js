@@ -16,7 +16,7 @@ export function SymbolMap(props) {
     const mouseOver = (d, event) => {
         setSelectedStation(d.station);
     }
-    const mouseOut = (d, event) => {
+    const mouseOut = (event) => {
         setSelectedStation(null);
     }
     
@@ -28,7 +28,7 @@ export function SymbolMap(props) {
                 // -- projection: find location of the items -- //
                 const [x, y] =  projection([d.longitude, d.latitude]);
                 return <circle key={"station" + d.longitude+d.latitude} cx={x} cy={y} r={radius(d.popularity)} opacity={0.7} 
-                    fill={getColor(selectedStation, d)} stroke={"black"} onMouseEnter={(event)=>{mouseOver(d, event)}} onMouseOut={(event)=>{mouseOut(d, event)}} />
+                    fill={getColor(selectedStation, d)} stroke={"black"} onMouseEnter={(event)=>{mouseOver(d, event)}} onMouseOut={(event)=>{mouseOut(event)}} />
             })}
         </g>
     

@@ -31,7 +31,7 @@ function SymmetricBarChart(props) {
     const mouseEnter = (d, event) => {
         setSelectedStation(d.station);
     }
-    const mouseOut = (d, event) => {
+    const mouseOut = (event) => {
         setSelectedStation(null);
     }
     
@@ -56,7 +56,7 @@ function SymmetricBarChart(props) {
                 return (
                 <rect key={d.station} x={xScale(d.station)} y={yScale1(d.start)} 
                 height={height/2-yScale1(d.start)} width={xScale.bandwidth()} fill={getColor("up", selectedStation, d)} stroke={"black"}
-                onMouseEnter={(event) => mouseEnter(d, event)} onMouseOut={(event)=>mouseOut(d, event)}></rect>
+                onMouseEnter={(event) => mouseEnter(d, event)} onMouseOut={(event)=>mouseOut(event)}></rect>
                 )
                 })}
         
@@ -79,7 +79,7 @@ function SymmetricBarChart(props) {
                     return (
                     <rect key={d.station} x={xScale(d.station)} y={0} 
                     height={yScale2(d.end)} width={xScale.bandwidth()} fill={getColor("down", selectedStation, d)} stroke={"black"}
-                    onMouseEnter={(event) => mouseEnter(d, event)} onMouseOut={(event)=>mouseOut(d, event)}></rect>
+                    onMouseEnter={(event) => mouseEnter(d, event)} onMouseOut={(event)=>mouseOut(event)}></rect>
                     )
                     })}
             
