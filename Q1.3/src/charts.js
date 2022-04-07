@@ -1,5 +1,5 @@
 import React from "react";
-import { scaleLinear, scaleBand, area, max, min, urveBasis, map } from "d3";
+import { scaleLinear, scaleBand, area, max, min, curveBasis, map } from "d3";
 
 function SymmetricBarChart(props) {
     const { offsetX, offsetY, data, height, width, selectedStation, setSelectedStation } = props;
@@ -8,9 +8,9 @@ function SymmetricBarChart(props) {
 
     // -- Define two scales for the y-axis -- //
     // -- upper one -- //
-    const yScale1 = scaleLinear().range([height/2, 0]).domain([min(data, d=>d.start), max(data, d=>d.start)]).nice();
+    const yScale1 = scaleLinear().range([height/2, 0]).domain([0, max(data, d=>d.start)]).nice();
     // -- lower one -- //
-    const yScale2 = scaleLinear().range([0, height/2]).domain([min(data, d=>d.end), max(data, d=>d.end)]).nice();
+    const yScale2 = scaleLinear().range([0, height/2]).domain([0, max(data, d=>d.end)]).nice();
     
     const getColor = (pos, selectedStation, d) => {
         if (selectedStation === d.station){
@@ -69,20 +69,20 @@ function SymmetricBarChart(props) {
             </text>
             {/* start your code here */}
             <line y2={height/2} stroke='black'/>
-         {yScale2.ticks().map(tickValue => 
-            <g key={tickValue} transform={`translate(-10, ${yScale2(tickValue)})`}>
-                <line x2={10} stroke='black' />
-                <text style={{ textAnchor:'end', fontSize:'10px' }} >
-                    {tickValue}
-                </text>
-                </g> )}
-            {data.map(d=>{
-                return (
-                <rect key={d.station} x={xScale(d.station)} y={0} 
-                height={yScale2(d.end)} width={xScale.bandwidth()} fill={getColor("down", selectedStation, d)} stroke={"black"}
-                onMouseEnter={(event) => mouseEnter(d, event)} onMouseOut={(event)=>mouseOut(d, event)}></rect>
-                )
-                })}
+            {yScale2.ticks().map(tickValue => 
+                <g key={tickValue} transform={`translate(-10, ${yScale2(tickValue)})`}>
+                    <line x2={10} stroke='black' />
+                    <text style={{ textAnchor:'end', fontSize:'10px' }} >
+                        {tickValue}
+                    </text>
+                    </g> )}
+                {data.map(d=>{
+                    return (
+                    <rect key={d.station} x={xScale(d.station)} y={0} 
+                    height={yScale2(d.end)} width={xScale.bandwidth()} fill={getColor("down", selectedStation, d)} stroke={"black"}
+                    onMouseEnter={(event) => mouseEnter(d, event)} onMouseOut={(event)=>mouseOut(d, event)}></rect>
+                    )
+                    })}
             
         </g>
     </g>
@@ -93,7 +93,23 @@ function SymmetricAreaChart(props) {
     const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     const xScale = scaleBand().range([0, width]).domain(map(data, d => d.month));
-
+    // -- upper one -- //
+    const yScale1 = scaleLinear().range([height/2, 0]).domain([0, max(data, d=>d.start)]).nice();
+    // -- lower one -- //
+    const yScale2 = scaleLinear().range([0, height/2]).domain([0, max(data, d=>d.end)]).nice();
+    // -- define the areas -- //
+    const p1 = area()
+    .x(d => xScale(d.month))
+    .y0(height/2)
+    .y1(d => yScale1(d.start))
+    .curve(curveBasis)
+     (data);
+     const p2 = area()
+    .x(d => xScale(d.month))
+    .y0(d => height - yScale1(d.end))
+    .y1(height/2)
+    .curve(curveBasis)
+     (data);
 
     return <g transform={`translate(${offsetX}, ${offsetY})`} >
         {/* the text needed is given as the following */}
@@ -108,18 +124,46 @@ function SymmetricAreaChart(props) {
                 {"End"}
         </text>
         </g>
-        {/* start your code here */}
-
-        
-    {<line x1={0} y1={height/2} x2={width} y2={height/2} stroke='black'/>}
-    {xScale.domain().map(tickValue =>
-        <g key={tickValue+'B'} transform={`translate(${xScale(tickValue)}, 0)`}>
-            <line y2={height} />
-            <text style={{textAnchor: 'start', fontSize:'10px' }} y={height+3} transform={`rotate(75, 0, ${height+3})`}>
+    {/* start your code here */}
+    {/* upper half of the chart */}
+    <line y1={0} y2={height/2} stroke='black'/>`
+    {yScale1.ticks(5).map(tickValue => 
+        <g key={tickValue} transform={`translate(-10, ${yScale1(tickValue)})`}>
+            <line x2={10} stroke='black' />
+            <text style={{ textAnchor:'end', fontSize:'10px' }} >
                 {tickValue}
             </text>
-        </g>
-    )}
+            </g> 
+        )}
+    <path d={p1} fill={'lightgreen'} stroke={'black'} />
+    <path d={p2} fill={'pink'} stroke={'black'} />
+    
+
+    {/* x-axis line */}
+    {<line x1={0} y1={height/2} x2={width} y2={height/2} stroke='black'/>}
+
+    {/* lower half of the chart */}
+    <g transform={`translate(${0}, ${height/2})`}>
+        <line y1={0} y2={height/2} stroke='black'/>`
+        {yScale2.ticks(5).reverse().map(tickValue => 
+        <g key={tickValue} transform={`translate(-10, ${yScale2(tickValue)})`}>
+            <line x2={10} stroke='black' />
+            <text style={{ textAnchor:'end', fontSize:'10px' }} >
+                {tickValue}
+            </text>
+            </g> 
+        )}
+        {xScale.domain().map(tickValue =>
+            <g key={tickValue+'B'} transform={`translate(${xScale(tickValue)}, 0)`}>
+                <line y1={height/2 + 10} y2={height/2 + 20} stroke={'black'}/>
+                <text x={-8} style={{textAnchor: 'start', fontSize:'10px' }} y={height/2 + 30} transform={`rotate(0, 0, ${height+3})`}>
+                    {tickValue}
+                </text>
+            </g>
+        )}
+    </g>
+
+
     </g>
 }
 
