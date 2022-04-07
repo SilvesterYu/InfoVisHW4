@@ -4,10 +4,8 @@ import { SymmetricAreaChart } from "./charts";
 export function Tooltip(props) {
     const {d, stationYearData, left, top, height, width} = props;
         if (!d) {
-            console.log("nullll");
             return <g></g>;
         } else {
-            console.log("tooltip");
             return <g transform={`translate(${left}, ${top})`}>
                     <text style={{ textAnchor:'start', fontSize:'15px'}}  transform={`translate(${0}, ${5})rotate(0)`}>{d.station} </text>
                     <SymmetricAreaChart offsetX={0} offsetY={0} height={height/2}

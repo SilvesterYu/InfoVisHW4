@@ -65,11 +65,9 @@ function CitiBike(){
     const data = dataAll.filter( d => {
         return d.month === MONTH[month];
     });
-    // console.log(data);
+
     const selectedPoint = dataAll.filter(d => d.station===selectedStation)[0];
      //Note: stationYearData is the data of the year of a seleted station. 
-     console.log(selectedPoint);
-     console.log("-----");
      const stationYearData = dataAll.filter( d=> {
         return d.station == selectedStation;
     }); 

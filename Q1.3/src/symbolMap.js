@@ -4,8 +4,6 @@ import { scaleLinear, min, max } from "d3";
 
 export function SymbolMap(props) {
     const {offsetX, offsetY, map, data, height, width, selectedStation, setSelectedStation} = props;
-    // console.log("monthly");
-    // console.log(max(data, d=>d.popularity));
     // -- projection -- //
     const projection = geoMercator().fitSize([width, height], map);
     let path = geoPath(projection);

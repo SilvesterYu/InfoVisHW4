@@ -44,14 +44,13 @@ function SymmetricBarChart(props) {
         {/* start your code here */}
         <line x1={0} x2={width} y1={height/2} y2={height/2} stroke="black" />
         <line y2={height/2} stroke='black'/>
-        {yScale1.ticks().map(tickValue => 
+        {yScale1.ticks(5).map(tickValue => 
             <g key={tickValue} transform={`translate(-10, ${yScale1(tickValue)})`}>
                 <line x2={10} stroke='black' />
                 <text style={{ textAnchor:'end', fontSize:'10px' }} >
                     {tickValue}
                 </text>
                 </g> )}
-
 
         {data.map(d=>{
                 return (
@@ -69,7 +68,7 @@ function SymmetricBarChart(props) {
             </text>
             {/* start your code here */}
             <line y2={height/2} stroke='black'/>
-            {yScale2.ticks().map(tickValue => 
+            {yScale2.ticks(5).map(tickValue => 
                 <g key={tickValue} transform={`translate(-10, ${yScale2(tickValue)})`}>
                     <line x2={10} stroke='black' />
                     <text style={{ textAnchor:'end', fontSize:'10px' }} >
